@@ -283,7 +283,46 @@ module.exports = {
         
         this.sendOrigin('timer/cancel', postBody, cb);
     },
-    reportMsgStatus:function(){},
-    reportTimerStatus:function(){},
+    reportMsgStatus:function(msgId, opts, cb){
+        cb = cb || opts;
+        opts = (opts === cb) ? {} : opts;
+        
+        if(!(cb instanceof Function)){
+            throw new Error("callback is not a function");
+        }
+        
+        if(!msgId){
+            cb(new Error("msgId must be a int value!"));
+            return;
+        }
+        
+        var postBody = this.getCommonPostBody(opts);
+        
+        postBody.msg_id = msgId;
+        
+        this.sendOrigin('report/query_msg_status', postBody, cb);
+    },
+    reportTimerStatus:function(timerId, opts, cb){
+        cb = cb || opts;
+        opts = (opts === cb) ? {} : opts;
+        
+        opts.start = opts.start || 0;
+        opts.limit = opts.limit || 100;
+        
+        if(!(cb instanceof Function)){
+            throw new Error("callback is not a function");
+        }
+        
+        if(!timerId){
+            cb(new Error("timerId must be a int value!"));
+            return;
+        }
+        
+        var postBody = this.getCommonPostBody(opts);
+        
+        postBody.timer_id = timerId;
+        
+        this.sendOrigin('report/query_timer_status', postBody, cb);
+    },
     reportTopicStatus:function(){},
 };
