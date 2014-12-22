@@ -36,12 +36,16 @@ var processResponse = function (res , cb) {
     });
     
     res.on('end', function () {
-        
         if(err){
             err.message = resContent;
         }else{
             
             try{
+                
+//                resContent = resContent.replace(/"msg_id":(\d+)/g,function(match,part1,index){
+//                    return '"msg_id":"' + part1 + '"'; 
+//                });
+                
                 resObj = JSON.parse(resContent);
             }catch(e){
                 err = new Error("parse error, response not a JSON String, " + resContent);
@@ -82,10 +86,10 @@ module.exports = {
         
         postContent['sign'] = sign;
         
+        console.dir(postContent);
         postStr = querystring.stringify(postContent);
         
         queryParam.headers['content-length'] = postStr.length;
-
         var req = http.request(queryParam, function(res){
             processResponse(res, cb);
         });
@@ -135,6 +139,26 @@ module.exports = {
             //expires : expires,
             bduss : bduss,
         };
+        
+        if(opts.deviceType !== undefined){
+            postBody.device_type = (opts.deviceType === 4) ? 4 : 3;
+        }
+        
+        if('number' === typeof opts.rangeStart){
+            postBody.range_start = ~~opts.rangeStart;
+        }
+        
+        if('number' === typeof opts.rangeEnd){
+            postBody.range_end = ~~opts.rangeEnd;
+        }
+        
+        if('number' === typeof opts.start){
+            postBody.start = ~~opts.start;
+        }
+        
+        if('number' === typeof opts.limit){
+            postBody.limit = ~~opts.limit || 100;
+        }
 
         return postBody;
     },
@@ -161,10 +185,6 @@ module.exports = {
         }
         
         var postBody = this.getCommonPostBody(opts);
-        
-        if(opts.deviceType !== undefined){
-            postBody.device_type = (opts.deviceType === 4) ? 4 : 3;
-        }
         
         postBody.msg =  JSON.stringify(msg);
         postBody.msg_type =  ( opts.msgType === 1 ? 1 : 0);     // 0通知 , 1透传
@@ -238,31 +258,38 @@ module.exports = {
      * @param {function} cb 
      *      推送完成后的callback, 包含一个可能的错误对像及返回值.
      */
-    queryDeviceNumByTag:function(tag,opts,cb){
+    queryDeviceNumByTag : function (tag, opts, cb) {
         cb = cb || opts;
         opts = (opts === cb) ? {} : opts;
-        
-        if(!(cb instanceof Function)){
+
+        if (!(cb instanceof Function)) {
             throw new Error("callback is not a function");
         }
-        
-            if('string' !== typeof tag){
-                cb(new Error("tag must be a String"));
-                return;
-            }
-        
+
+        if ('string' !== typeof tag) {
+            cb(new Error("tag must be a String"));
+            return;
+        }
+
         var postBody = this.getCommonPostBody(opts);
-        
-        postBody.tag =  tag;
-        
+
+        if (opts.deviceType !== undefined) {
+            postBody.device_type = opts.deviceType;
+        }
+
+        postBody.tag = tag;
+
         this.sendOrigin('tag/device_num', postBody, cb);
     },
     /**
      * 取消尚未执行的定时推送任务
-     * @param {number} timerId
-     * @param {Map} opts  query param
-     * @param {function} cb 
-     *      推送完成后的callback, 包含一个可能的错误对像及返回值.
+     * 
+     * @param {number}
+     *            timerId
+     * @param {Map}
+     *            opts query param
+     * @param {function}
+     *            cb 推送完成后的callback, 包含一个可能的错误对像及返回值.
      */
     cleanTimer:function(timerId,opts,cb){
         cb = cb || opts;
@@ -280,6 +307,10 @@ module.exports = {
         var postBody = this.getCommonPostBody(opts);
         
         postBody.timer_id = timerId;
+        
+        if(opts.deviceType !== undefined){
+            postBody.device_type = opts.deviceType;
+        }
         
         this.sendOrigin('timer/cancel', postBody, cb);
     },
@@ -300,9 +331,11 @@ module.exports = {
         
         postBody.msg_id = msgId;
         
+
+        
         this.sendOrigin('report/query_msg_status', postBody, cb);
     },
-    reportTimerStatus:function(timerId, opts, cb){
+    reportTimerRecords:function(timerId, opts, cb){
         cb = cb || opts;
         opts = (opts === cb) ? {} : opts;
         
@@ -322,7 +355,28 @@ module.exports = {
         
         postBody.timer_id = timerId;
         
-        this.sendOrigin('report/query_timer_status', postBody, cb);
+        this.sendOrigin('report/query_timer_records', postBody, cb);
     },
-    reportTopicStatus:function(){},
+    reportTopicRecords:function(topic, opts, cb){
+        cb = cb || opts;
+        opts = (opts === cb) ? {} : opts;
+        
+        opts.start = opts.start || 0;
+        opts.limit = opts.limit || 100;
+        
+        if(!(cb instanceof Function)){
+            throw new Error("callback is not a function");
+        }
+        
+        if(!topic || 'string' !== typeof topic){
+            cb(new Error("topic must be a string value!"));
+            return;
+        }
+        
+        var postBody = this.getCommonPostBody(opts);
+        
+        postBody.topic_id = topic;
+        debugger;
+        this.sendOrigin('report/query_topic_records', postBody, cb);
+    },
 };
