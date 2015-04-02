@@ -1,5 +1,5 @@
 /**
- * New node file
+ * 生成请求签名及uri编码
  */
 var crypto = require('crypto');
 

@@ -71,7 +71,7 @@ function pushSingleDeviceToAndroid () {
     });
 }
 
-function pushSingleDevice(){
+function pushSingleDeviceToIos(){
     // 向ios单播
     sdk.pushSingleDevice({
         title:'SDK_FOR_NODEJS_PUSH_SINGLE_DEVICE',
@@ -132,8 +132,10 @@ function callbackRecordsWithReportMsgStatus (msglist) {
     }
 }
 
-
-queryDeviceNumByTag('A');
+//pushAll();
+pushSingleDeviceToAndroid();
+//pushSingleDeviceToIos();
+//queryDeviceNumByTag('A');
 //reportMsgStatus('5060266789274074107');
-reportTimerRecords('4182750',callbackRecordsWithReportMsgStatus);
-reportTopicRecords('aaa',callbackRecordsWithReportMsgStatus);
+//reportTimerRecords('3698005',callbackRecordsWithReportMsgStatus);
+//reportTopicRecords('aaa',callbackRecordsWithReportMsgStatus);
