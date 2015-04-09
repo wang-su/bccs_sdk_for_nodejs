@@ -8,14 +8,13 @@ var querystring = require('querystring');
 var pushUtils = require('./utils.js');
 
 var url = require('url');
-var baseUrl = 'http://logiclayernew.baidu.com:8080/rest/3.0/';
+var baseUrl = 'http://api.tuisong.baidu.com/rest/3.0/';
 
 var apikey = '';
 var secretKey = '';
 var bduss = '';
 
 var singKey = pushUtils.singKey;
-
 
 var processResponse = function (res, cb) {
 
@@ -63,11 +62,15 @@ var processResponse = function (res, cb) {
     });
 }
 
+var makeUserAgentStr = function(){
+    return "BCCS_SDK/3.0 () NodeJS/" + process.version +" (Baidu Push Server SDK for Nodejs V0.0)" ;;
+}
+
 module.exports = {
     init : function (opt) {
         apikey = opt.apikey || null;
         secretKey = opt.secretKey || null;
-        bduss = opt.bduss || null;
+//        bduss = opt.bduss || null;
         baseUrl = opt.baseUrl || baseUrl;
     },
     sendOrigin : function (urlMethod, postContent, cb) {
@@ -78,7 +81,9 @@ module.exports = {
         var queryParam = url.parse(baseUrl + urlMethod);
         // set the http method to 'post' is required
         queryParam.method = 'post';
+        
         queryParam.headers = {
+            'user-agent' : makeUserAgentStr(),
             'content-type' : "application/x-www-form-urlencoded;charset=utf-8" // 强制要求content-type及charset
         }
 
@@ -138,7 +143,7 @@ module.exports = {
             apikey : apikey,
             timestamp : timestamp,
             // expires : expires,
-            bduss : bduss,
+//            bduss : bduss,
         };
 
         if (opts.deviceType !== undefined) {
