@@ -1,7 +1,7 @@
 /**
  * New node file
  */
-var sdk = require('../src/sdk.js');
+var sdk = require('../src/sdk.js')();
 var privateInfo = require("./_private.js");
 
 sdk.init(privateInfo);
@@ -20,9 +20,11 @@ function queryDeviceNumByTag (target) {
     sdk.queryDeviceNumByTag(target, {
         deviceType : 3
     }, function (err, res) {
+        
         if (err) {
             console.dir(err.stack);
         }
+        
         console.log(arguments);
     });
 }
