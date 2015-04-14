@@ -133,19 +133,17 @@ var createSdk = function () {
                 throw new Error('Message.description is null');
             }
 
-            if (!msg.customContent) {
-                throw new Error('Message.customContent is null');
+            if (msg.customContent) {
+                // check type and rename the customContent
+                if (!Array.isArray(msg.customContent) && 'object' !== typeof (msg.customContent)) {
+                    // 认为是字符串
+                    msg.custom_content = [msg.customContent];
+                } else {
+                    msg.custom_content = msg.customContent;
+                }
+                delete msg.customContent;
             }
 
-            // check type and rename the customContent
-            if (!Array.isArray(msg.customContent) && 'object' !== typeof (msg.customContent)) {
-                // 认为是字符串
-                msg.custom_content = [msg.customContent];
-            } else {
-                msg.custom_content = msg.customContent;
-            }
-
-            delete msg.customContent;
 
             return msg;
         },

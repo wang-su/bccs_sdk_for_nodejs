@@ -61,7 +61,6 @@ function pushSingleDeviceToAndroid () {
     sdk.pushSingleDevice({
         title : 'SDK_FOR_NODEJS_PUSH_SINGLE_DEVICE',
         description : 'send message from push sdk for nodejs',
-        customContent : ['中文测试!~~~~~']
     }, {
         msgType : 1,
         deviceType : 3,
