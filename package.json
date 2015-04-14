@@ -1,6 +1,6 @@
 {
   "name": "bccs",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "baidu push service sdk for nodejs (unstable)",
   "main": "src/sdk.js",
   "directories": {

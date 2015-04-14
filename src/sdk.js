@@ -17,7 +17,6 @@ var querystring = require('querystring');
 
 var pushUtils = require('./utils.js');
 var url = require('url');
-var baseUrl = 'http://api.tuisong.baidu.com/rest/3.0/';
 
 var os = require('os');
 var pkg = require('../package.json');
@@ -87,7 +86,8 @@ var createSdk = function () {
 
     var apiKey = '';
     var secretKey = '';
-
+    var baseUrl = 'http://api.tuisong.baidu.com/rest/3.0/';
+    
     var sdk = {
         init : function (opt) {
             apiKey = opt.apiKey || null;
@@ -413,6 +413,3 @@ var createSdk = function () {
 };
 
 module.exports = createSdk;
-
-
-console.log(makeUserAgentStr());
