@@ -2,7 +2,7 @@
  * 生成请求签名及uri编码
  */
 var crypto = require('crypto');
-
+var querystring = require('querystring');
 
 function fullEncodeURIComponent (str) {
     var rv = encodeURIComponent(str).replace(/[!'()*~]/g, function(c) {
@@ -23,7 +23,7 @@ var singKey = function (reqParam, postParmas, secretKey) {
     var basekey = "";
 
     var method = reqParam.method.toUpperCase();
-    var baseurl = reqParam.href;
+    var baseurl = reqParam.href.replace((reqParam.search || '') + (reqParam.hash || ''), '');
     var query = reqParam.query || false;
     var param = {};
     var paramStr = '';
