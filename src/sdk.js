@@ -21,7 +21,7 @@ var url = require('url');
 var os = require('os');
 var pkg = require('../package.json');
 
-var singKey = pushUtils.singKey;
+var signKey = pushUtils.signKey;
 
 var makeUserAgentStr = function () {
     var systemInfo = os.type() + " Version" + os.release() + ": " + os.arch();
@@ -108,7 +108,7 @@ var createSdk = function () {
                 'content-type' : "application/x-www-form-urlencoded;charset=utf-8" // 强制要求content-type及charset
             };
 
-            sign = singKey(queryParam, postContent, secretKey);
+            sign = signKey(queryParam, postContent, secretKey);
 
             postContent.sign = sign;
 

@@ -19,7 +19,7 @@ function fullEncodeURIComponent (str) {
  * @param {string} secretKey 开发者中心的SK
  * @return {string} 签名值
  */
-var singKey = function (reqParam, postParmas, secretKey) {
+var signKey = function (reqParam, postParmas, secretKey) {
     var basekey = "";
 
     var method = reqParam.method.toUpperCase();
@@ -61,5 +61,5 @@ var singKey = function (reqParam, postParmas, secretKey) {
 }
 
 module.exports = {
-    singKey:singKey
+    signKey:signKey
 };
